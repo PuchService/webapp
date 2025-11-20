@@ -2,22 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Mini App</title>
+  <title>Booking Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<h1>Привет из Telegram Web App!</h1>
-<button id="btn">Отправить данные боту</button>
+<div class="container">
 
+  <h2>Services</h2>
+  <div id="services"></div>
+
+  <h2>Masters</h2>
+  <div id="masters"></div>
+
+  <h2>Available Slots</h2>
+  <div id="slots"></div>
+
+  <button id="bookBtn" class="btn-primary" style="display:none">Book</button>
+</div>
+
+<script src="api.js"></script>
 <script>
   const tg = window.Telegram.WebApp;
-
-  // Разворачиваем окно на весь экран
   tg.expand();
 
-  document.getElementById('btn').addEventListener('click', () => {
-    // Отправка данных боту
-    tg.sendData(JSON.stringify({message: "Привет бот!"}));
-  });
+  let selectedService = null;
+  let selectedMaster = null;
+  let selectedSlot = null;
+
+  loadServices();
+
+  function loadServices() {
+    api.getServices().then(list => {
+      const root = document.getElementById("services");
+      root.innerHTML = "";
+      list.forEach(s => {
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.innerText = s.name;
+        btn.onclick = () => {
+          selectedService = s;
+          loadMasters(s.id);
+        };
+        root.appendChild(btn);
+      });
+    });
+  }
+
+  function loadMasters(serviceId) {
+    api.getMasters(serviceId).then(list => {
+      const root = document.getElementById("masters");
+      root.innerHTML = "";
+      list.forEach(m => {
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.innerText = m.name;
+        btn.onclick = () => {
+          selectedMaster = m;
+          loadSlots(m.id);
+        };
+        root.appendChild(btn);
+      });
+    });
+  }
+
+  function loadSlots(masterId) {
+    api.getSlots(masterId).then(list => {
+      const root = document.getElementById("slots");
+      root.innerHTML = "";
+
+      list.forEach(sl => {
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.innerText = sl.time;
+        btn.onclick = () => {
+          selectedSlot = sl;
+          document.getElementById("bookBtn").style.display = "block";
+        };
+        root.appendChild(btn);
+      });
+    });
+  }
+
+  document.getElementById("bookBtn").onclick = () => {
+    api.book({
+      serviceId: selectedService.id,
+      masterId: selectedMaster.id,
+      slotId: selectedSlot.id,
+      tgUserId: tg.initDataUnsafe.user?.id
+    }).then(res => {
+      tg.sendData(JSON.stringify({
+        type: "BOOKING_CREATED",
+        booking: res
+      }));
+      tg.close();
+    });
+  };
 </script>
 </body>
 </html>
