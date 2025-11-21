@@ -1,89 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Booking Mini App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Telegram Mini App SPA</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Manrope', sans-serif; min-height: 100vh; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .size-10 { width: 40px; height: 40px; }
+    .size-12 { width: 48px; height: 48px; }
+    .size-16 { width: 64px; height: 64px; }
+    .cursor-pointer { cursor: pointer; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .bg-primary { background-color: #007bff; }
+    .text-primary { color: #007bff; }
+  </style>
 </head>
-<body>
-<div class="container">
-  <h2>Services</h2>
-  <div id="services"></div>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
 
-  <h2>Masters</h2>
-  <div id="masters"></div>
+<div id="app"></div>
 
-  <h2>Available Slots</h2>
-  <div id="slots"></div>
-</div>
-
-<script src="api.js"></script>
 <script>
-  const tg = window.Telegram.WebApp;
-  tg.expand();
+  const app = document.getElementById("app");
+  let state = { page: "services", selectedService: null, selectedTime: null };
 
-  tg.MainButton.text = "Book";
-  tg.MainButton.color = "#3b82f6";
-  tg.MainButton.textColor = "#fff";
-  tg.MainButton.hide();
-
-  let selectedService=null, selectedMaster=null, selectedSlot=null;
-
-  loadServices();
-
-  function loadServices(){
-    api.getServices().then(list=>{
-      const root=document.getElementById("services");
-      root.innerHTML="";
-      list.forEach(s=>{
-        const btn=document.createElement("button");
-        btn.innerText=s.name;
-        btn.onclick=()=>{selectedService=s; loadMasters(s.id);}
-        root.appendChild(btn);
-      });
-    });
+  /* ------------------ RENDER ------------------ */
+  function render() {
+    app.innerHTML = "";
+    if(state.page === "services") renderServices();
+    if(state.page === "master") renderMasterProfile();
+    if(state.page === "booking") renderBooking();
   }
 
-  function loadMasters(serviceId){
-    api.getMasters(serviceId).then(list=>{
-      const root=document.getElementById("masters");
-      root.innerHTML="";
-      list.forEach(m=>{
-        const btn=document.createElement("button");
-        btn.innerText=m.name;
-        btn.onclick=()=>{selectedMaster=m; loadSlots(m.id);}
-        root.appendChild(btn);
+  /* ------------------ SERVICES PAGE ------------------ */
+  function renderServices() {
+    const services = [
+      {id:1,name:"Мужская стрижка",desc:"Классическая стрижка с мытьем и укладкой.",price:"5000₸",time:"45 мин",img:"https://lh3.googleusercontent.com/aida-public/AB6AXuDOsYVmtA-ca9-LtcpDxY4_F0wqeBzBpd0kRuXwE49jG4Za7zdKmX29KodoFPo6JlC-rCXwQ-UwaIVzgnfvuh0C-ckUsPp22mWLESTQh-KywqHnzGakkDsK9LpKDn87OFLRJPdKz5AysJjl9SZd_n1sVn0f74YA5RWFX8T6Pp4cIVcbYFHahT7J6IpxFWxBfPcRuEcW4uIpqwSMiXyNo9Sz7iQFZhB4Iv_mAYAMKzXGFlamjqaTVpk-dTjNEQKjx7lS86G75drw"},
+      {id:2,name:"Гель-маникюр",desc:"Стойкое покрытие гель-лаком.",price:"4000₸",time:"60 мин",img:"https://lh3.googleusercontent.com/aida-public/AB6AXuCOBrasY24Ren0FzQM1qzzuMlt880sqnvuuIRlOqTZAxOISZHh7Pc1jojq6eeL2s5UjiqCt-bnKt-pOukbzx90SB94_oOJOHu48fn-JuC4und02sDHtm9782OvrRANeRQwo4EMCYm8_--mNRp2uj6_045s3suFlmn6Whr4M6W8wXZhU37m0nKiRGjjkei8QKF-xaMXbqUoDZlftd-rqNPCxgqDE2XLjyrvpspp4RMnvS4SznZMzkHLcgDlSXZpMIqdzB9_02N5J39c"}
+    ];
+
+    const container = document.createElement("div");
+    container.innerHTML = `
+    <div class="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
+        <header class="sticky top-0 z-10 flex h-14 items-center justify-between bg-background-light/80 px-4 backdrop-blur-sm dark:bg-background-dark/80">
+            <div class="size-10"></div>
+            <h1 class="flex-1 text-center text-lg font-bold text-zinc-900 dark:text-zinc-100">Услуги / Қызметтер</h1>
+            <div class="size-10"></div>
+        </header>
+        <main class="flex flex-1 flex-col gap-px bg-zinc-200 p-4 pt-2 dark:bg-zinc-800"></main>
+    </div>
+    `;
+
+    const main = container.querySelector("main");
+    services.forEach(s=>{
+      const el = document.createElement("div");
+      el.className = "service-item flex items-center gap-4 bg-white p-4 dark:bg-zinc-900 cursor-pointer";
+      el.innerHTML = `
+            <div class="bg-cover bg-center rounded-lg size-16" style="background-image:url('${s.img}');"></div>
+            <div class="flex-1 flex flex-col justify-center">
+                <p class="text-base font-semibold text-zinc-900 dark:text-zinc-100">${s.name}</p>
+                <p class="text-sm text-zinc-500 dark:text-zinc-400">${s.desc}</p>
+                <p class="mt-1 text-base font-semibold text-primary">${s.price} • ${s.time}</p>
+            </div>
+            <div class="shrink-0 text-zinc-400 dark:text-zinc-500">
+                <span class="material-symbols-outlined">arrow_forward_ios</span>
+            </div>
+        `;
+      el.addEventListener("click", ()=>{
+        state.selectedService = s;
+        state.page = "master";
+        render();
       });
+      main.appendChild(el);
     });
+
+    app.appendChild(container);
   }
 
-  function loadSlots(masterId){
-    api.getSlots(masterId).then(list=>{
-      const root=document.getElementById("slots");
-      root.innerHTML="";
-      list.forEach(sl=>{
-        const btn=document.createElement("button");
-        btn.innerText=sl.time;
-        btn.onclick=()=>{selectedSlot=sl; tg.MainButton.show();}
-        root.appendChild(btn);
-      });
+  /* ------------------ MASTER PROFILE PAGE ------------------ */
+  function renderMasterProfile() {
+    const service = state.selectedService;
+    const container = document.createElement("div");
+    container.innerHTML = `
+    <div class="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
+        <header class="sticky top-0 z-10 flex items-center justify-between bg-white/80 dark:bg-zinc-900/80 p-4 border-b border-gray-200 dark:border-gray-700">
+            <button class="size-10 flex items-center justify-center text-zinc-900 dark:text-zinc-100">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <h1 class="flex-1 text-center font-bold">Jane Doe</h1>
+            <div class="size-10"></div>
+        </header>
+        <main class="flex-1 p-4">
+            <div class="flex flex-col items-center gap-4">
+                <div class="bg-cover bg-center rounded-full w-32 h-32" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuC3l9mIB4m5nbGtkWJA5GSa0dSoL32VTaYMw5DH2Dg7c-JwT4RX0Aep7sPvgLsjR9kZ8wJy6ka6HQKugpfN25emUdhoRJH-bQ30b3DcqsCG0tngWkysBeaYnMXAKo7i6aMLZ2YzjFkvJ1iRQtm0CBjnyOgXZAUrjXuRW3fH4uCPOTbnnlo3foxXrWinpuiRk0BAbqPq4oaPV1l2Z-h7tkadXP6a2tz645xO5MljW48iKw5I826nasInnHZ5GAbUgX7ZnmLjQWjxvYs');"></div>
+                <p class="text-lg font-bold">${service.name}</p>
+                <p class="text-sm text-zinc-500 dark:text-zinc-400">${service.desc}</p>
+                <p class="text-base font-semibold text-primary">${service.price} • ${service.time}</p>
+                <button class="book-button w-full bg-primary text-white h-12 rounded-lg">Записаться</button>
+            </div>
+        </main>
+    </div>
+    `;
+    // Переход к бронированию
+    container.querySelector(".book-button").addEventListener("click", ()=>{
+      state.page = "booking";
+      render();
     });
+    // Кнопка назад → services
+    container.querySelector("button").addEventListener("click", ()=>{
+      state.page = "services";
+      render();
+    });
+    app.appendChild(container);
   }
 
-  tg.MainButton.onClick(()=>{
-    if(!selectedService || !selectedMaster || !selectedSlot) return;
-
-    api.book({
-      serviceId:selectedService.id,
-      masterId:selectedMaster.id,
-      slotId:selectedSlot.id,
-      tgUserId: tg.initDataUnsafe.user?.id
-    }).then(res=>{
-      tg.sendData(JSON.stringify({type:"BOOKING_CREATED", booking:res}));
-      tg.close();
+  /* ------------------ BOOKING PAGE ------------------ */
+  function renderBooking() {
+    const times = ["10:00","11:00","12:00","13:00","14:00"];
+    const container = document.createElement("div");
+    container.innerHTML = `
+    <div class="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
+        <header class="sticky top-0 z-10 flex items-center justify-between bg-white/80 dark:bg-zinc-900/80 p-4 border-b border-gray-200 dark:border-gray-700">
+            <button class="size-10 flex items-center justify-center text-zinc-900 dark:text-zinc-100">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <h1 class="flex-1 text-center font-bold">Выбор времени</h1>
+            <div class="size-10"></div>
+        </header>
+        <main class="flex-1 p-4 flex flex-wrap gap-3"></main>
+        <div class="p-4">
+            <button class="confirm-button w-full bg-primary text-white h-12 rounded-lg">Подтвердить запись</button>
+        </div>
+    </div>
+    `;
+    const main = container.querySelector("main");
+    times.forEach(t=>{
+      const btn = document.createElement("button");
+      btn.className = "flex-1 h-10 rounded-lg border border-gray-300 bg-white cursor-pointer";
+      btn.textContent = t;
+      btn.addEventListener("click", ()=>{
+        state.selectedTime = t;
+        Array.from(main.children).forEach(c=>c.classList.remove("bg-primary","text-white"));
+        btn.classList.add("bg-primary","text-white");
+      });
+      main.appendChild(btn);
     });
-  });
+
+    container.querySelector("button").addEventListener("click", ()=>{
+      state.page = "master";
+      render();
+    });
+    container.querySelector(".confirm-button").addEventListener("click", ()=>{
+      if(!state.selectedTime){
+        alert("Выберите время!");
+        return;
+      }
+      alert(`Запись на ${state.selectedTime} подтверждена!`);
+    });
+
+    app.appendChild(container);
+  }
+
+  // Инициализация
+  render();
 </script>
+
 </body>
 </html>
