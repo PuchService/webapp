@@ -3,171 +3,127 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Telegram Mini App SPA</title>
+  <title>Book a Football Field</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap" rel="stylesheet"/>
   <style>
-    body { font-family: 'Manrope', sans-serif; min-height: 100vh; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    .size-10 { width: 40px; height: 40px; }
-    .size-12 { width: 48px; height: 48px; }
-    .size-16 { width: 64px; height: 64px; }
-    .cursor-pointer { cursor: pointer; }
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .bg-primary { background-color: #007bff; }
-    .text-primary { color: #007bff; }
+    body {
+      font-family: 'Lexend', sans-serif;
+      background-color: #f6f7f8;
+      color: #1f2937;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .snap-x { scroll-snap-type: x mandatory; }
+    .snap-center { scroll-snap-align: center; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+<body class="bg-background-light">
 
-<div id="app"></div>
+<!-- Header -->
+<header class="sticky top-0 z-10 flex items-center justify-between bg-white shadow px-4 h-16">
+  <button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100">
+    <span class="material-symbols-outlined text-2xl">arrow_back</span>
+  </button>
+  <h1 class="text-lg font-bold text-center flex-1">Book a Football Field</h1>
+  <div class="w-10"></div>
+</header>
 
-<script>
-  const app = document.getElementById("app");
-  let state = { page: "services", selectedService: null, selectedTime: null };
+<main class="p-4 space-y-4">
 
-  /* ------------------ RENDER ------------------ */
-  function render() {
-    app.innerHTML = "";
-    if(state.page === "services") renderServices();
-    if(state.page === "master") renderMasterProfile();
-    if(state.page === "booking") renderBooking();
-  }
+  <!-- Field Cards -->
+  <div class="space-y-4">
 
-  /* ------------------ SERVICES PAGE ------------------ */
-  function renderServices() {
-    const services = [
-      {id:1,name:"Мужская стрижка",desc:"Классическая стрижка с мытьем и укладкой.",price:"5000₸",time:"45 мин",img:"https://lh3.googleusercontent.com/aida-public/AB6AXuDOsYVmtA-ca9-LtcpDxY4_F0wqeBzBpd0kRuXwE49jG4Za7zdKmX29KodoFPo6JlC-rCXwQ-UwaIVzgnfvuh0C-ckUsPp22mWLESTQh-KywqHnzGakkDsK9LpKDn87OFLRJPdKz5AysJjl9SZd_n1sVn0f74YA5RWFX8T6Pp4cIVcbYFHahT7J6IpxFWxBfPcRuEcW4uIpqwSMiXyNo9Sz7iQFZhB4Iv_mAYAMKzXGFlamjqaTVpk-dTjNEQKjx7lS86G75drw"},
-      {id:2,name:"Гель-маникюр",desc:"Стойкое покрытие гель-лаком.",price:"4000₸",time:"60 мин",img:"https://lh3.googleusercontent.com/aida-public/AB6AXuCOBrasY24Ren0FzQM1qzzuMlt880sqnvuuIRlOqTZAxOISZHh7Pc1jojq6eeL2s5UjiqCt-bnKt-pOukbzx90SB94_oOJOHu48fn-JuC4und02sDHtm9782OvrRANeRQwo4EMCYm8_--mNRp2uj6_045s3suFlmn6Whr4M6W8wXZhU37m0nKiRGjjkei8QKF-xaMXbqUoDZlftd-rqNPCxgqDE2XLjyrvpspp4RMnvS4SznZMzkHLcgDlSXZpMIqdzB9_02N5J39c"}
-    ];
-
-    const container = document.createElement("div");
-    container.innerHTML = `
-    <div class="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
-        <header class="sticky top-0 z-10 flex h-14 items-center justify-between bg-background-light/80 px-4 backdrop-blur-sm dark:bg-background-dark/80">
-            <div class="size-10"></div>
-            <h1 class="flex-1 text-center text-lg font-bold text-zinc-900 dark:text-zinc-100">Услуги / Қызметтер</h1>
-            <div class="size-10"></div>
-        </header>
-        <main class="flex flex-1 flex-col gap-px bg-zinc-200 p-4 pt-2 dark:bg-zinc-800"></main>
-    </div>
-    `;
-
-    const main = container.querySelector("main");
-    services.forEach(s=>{
-      const el = document.createElement("div");
-      el.className = "service-item flex items-center gap-4 bg-white p-4 dark:bg-zinc-900 cursor-pointer";
-      el.innerHTML = `
-            <div class="bg-cover bg-center rounded-lg size-16" style="background-image:url('${s.img}');"></div>
-            <div class="flex-1 flex flex-col justify-center">
-                <p class="text-base font-semibold text-zinc-900 dark:text-zinc-100">${s.name}</p>
-                <p class="text-sm text-zinc-500 dark:text-zinc-400">${s.desc}</p>
-                <p class="mt-1 text-base font-semibold text-primary">${s.price} • ${s.time}</p>
-            </div>
-            <div class="shrink-0 text-zinc-400 dark:text-zinc-500">
-                <span class="material-symbols-outlined">arrow_forward_ios</span>
-            </div>
-        `;
-      el.addEventListener("click", ()=>{
-        state.selectedService = s;
-        state.page = "master";
-        render();
-      });
-      main.appendChild(el);
-    });
-
-    app.appendChild(container);
-  }
-
-  /* ------------------ MASTER PROFILE PAGE ------------------ */
-  function renderMasterProfile() {
-    const service = state.selectedService;
-    const container = document.createElement("div");
-    container.innerHTML = `
-    <div class="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
-        <header class="sticky top-0 z-10 flex items-center justify-between bg-white/80 dark:bg-zinc-900/80 p-4 border-b border-gray-200 dark:border-gray-700">
-            <button class="size-10 flex items-center justify-center text-zinc-900 dark:text-zinc-100">
-                <span class="material-symbols-outlined">arrow_back</span>
-            </button>
-            <h1 class="flex-1 text-center font-bold">Jane Doe</h1>
-            <div class="size-10"></div>
-        </header>
-        <main class="flex-1 p-4">
-            <div class="flex flex-col items-center gap-4">
-                <div class="bg-cover bg-center rounded-full w-32 h-32" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuC3l9mIB4m5nbGtkWJA5GSa0dSoL32VTaYMw5DH2Dg7c-JwT4RX0Aep7sPvgLsjR9kZ8wJy6ka6HQKugpfN25emUdhoRJH-bQ30b3DcqsCG0tngWkysBeaYnMXAKo7i6aMLZ2YzjFkvJ1iRQtm0CBjnyOgXZAUrjXuRW3fH4uCPOTbnnlo3foxXrWinpuiRk0BAbqPq4oaPV1l2Z-h7tkadXP6a2tz645xO5MljW48iKw5I826nasInnHZ5GAbUgX7ZnmLjQWjxvYs');"></div>
-                <p class="text-lg font-bold">${service.name}</p>
-                <p class="text-sm text-zinc-500 dark:text-zinc-400">${service.desc}</p>
-                <p class="text-base font-semibold text-primary">${service.price} • ${service.time}</p>
-                <button class="book-button w-full bg-primary text-white h-12 rounded-lg">Записаться</button>
-            </div>
-        </main>
-    </div>
-    `;
-    // Переход к бронированию
-    container.querySelector(".book-button").addEventListener("click", ()=>{
-      state.page = "booking";
-      render();
-    });
-    // Кнопка назад → services
-    container.querySelector("button").addEventListener("click", ()=>{
-      state.page = "services";
-      render();
-    });
-    app.appendChild(container);
-  }
-
-  /* ------------------ BOOKING PAGE ------------------ */
-  function renderBooking() {
-    const times = ["10:00","11:00","12:00","13:00","14:00"];
-    const container = document.createElement("div");
-    container.innerHTML = `
-    <div class="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
-        <header class="sticky top-0 z-10 flex items-center justify-between bg-white/80 dark:bg-zinc-900/80 p-4 border-b border-gray-200 dark:border-gray-700">
-            <button class="size-10 flex items-center justify-center text-zinc-900 dark:text-zinc-100">
-                <span class="material-symbols-outlined">arrow_back</span>
-            </button>
-            <h1 class="flex-1 text-center font-bold">Выбор времени</h1>
-            <div class="size-10"></div>
-        </header>
-        <main class="flex-1 p-4 flex flex-wrap gap-3"></main>
-        <div class="p-4">
-            <button class="confirm-button w-full bg-primary text-white h-12 rounded-lg">Подтвердить запись</button>
+    <!-- Card 1 -->
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
+      <div class="relative w-full">
+        <div class="flex w-full overflow-x-auto snap-x no-scrollbar">
+          <!-- Каждая фотка занимает всю ширину экрана -->
+          <div class="w-full flex-shrink-0 snap-center">
+            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1601554231765-7fceeb9c3d17?auto=format&fit=crop&w=800&q=80");'></div>
+          </div>
+          <div class="w-full flex-shrink-0 snap-center">
+            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=800&q=80");'></div>
+          </div>
+          <div class="w-full flex-shrink-0 snap-center">
+            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1560353464-1527e2e007f6?auto=format&fit=crop&w=800&q=80");'></div>
+          </div>
         </div>
+        <!-- Дотсы -->
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+          <div class="w-2 h-2 rounded-full bg-white/80 ring-1 ring-black/10"></div>
+          <div class="w-2 h-2 rounded-full bg-white/40 ring-1 ring-black/10"></div>
+          <div class="w-2 h-2 rounded-full bg-white/40 ring-1 ring-black/10"></div>
+        </div>
+      </div>
+      <div class="p-4 space-y-2">
+        <p class="text-lg font-bold">Green Arena Football Field</p>
+        <p class="text-gray-500">Full-size • Downtown, City Center</p>
+        <p class="text-gray-500">$50 / hour</p>
+        <button onclick="openBooking('Green Arena Football Field')" class="w-full bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-medium py-2 rounded-lg">Book Field</button>
+      </div>
     </div>
-    `;
-    const main = container.querySelector("main");
-    times.forEach(t=>{
-      const btn = document.createElement("button");
-      btn.className = "flex-1 h-10 rounded-lg border border-gray-300 bg-white cursor-pointer";
-      btn.textContent = t;
-      btn.addEventListener("click", ()=>{
-        state.selectedTime = t;
-        Array.from(main.children).forEach(c=>c.classList.remove("bg-primary","text-white"));
-        btn.classList.add("bg-primary","text-white");
-      });
-      main.appendChild(btn);
-    });
 
-    container.querySelector("button").addEventListener("click", ()=>{
-      state.page = "master";
-      render();
-    });
-    container.querySelector(".confirm-button").addEventListener("click", ()=>{
-      if(!state.selectedTime){
-        alert("Выберите время!");
-        return;
-      }
-      alert(`Запись на ${state.selectedTime} подтверждена!`);
-    });
+    <!-- Card 2 -->
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
+      <div class="relative w-full">
+        <div class="flex w-full overflow-x-auto snap-x no-scrollbar">
+          <div class="w-full flex-shrink-0 snap-center">
+            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1583089752020-3f97efbd3f7d?auto=format&fit=crop&w=800&q=80");'></div>
+          </div>
+          <div class="w-full flex-shrink-0 snap-center">
+            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1562072540-9e2a1536b4d2?auto=format&fit=crop&w=800&q=80");'></div>
+          </div>
+          <div class="w-full flex-shrink-0 snap-center">
+            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1552074287-91d3f0f0e9a2?auto=format&fit=crop&w=800&q=80");'></div>
+          </div>
+        </div>
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+          <div class="w-2 h-2 rounded-full bg-white/80 ring-1 ring-black/10"></div>
+          <div class="w-2 h-2 rounded-full bg-white/40 ring-1 ring-black/10"></div>
+          <div class="w-2 h-2 rounded-full bg-white/40 ring-1 ring-black/10"></div>
+        </div>
+      </div>
+      <div class="p-4 space-y-2">
+        <p class="text-lg font-bold">Indoor Soccer Center</p>
+        <p class="text-gray-500">5-a-side • Uptown</p>
+        <p class="text-gray-500">$35 / hour</p>
+        <button onclick="openBooking('Indoor Soccer Center')" class="w-full bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-medium py-2 rounded-lg">Book Field</button>
+      </div>
+    </div>
 
-    app.appendChild(container);
-  }
+  </div>
 
-  // Инициализация
-  render();
-</script>
+  <!-- Booking Modal -->
+  <div id="bookingModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl w-11/12 max-w-md p-4 space-y-4">
+      <h2 class="text-xl font-bold" id="fieldName">Field Name</h2>
+      <p class="text-gray-500">Select a date and time for your booking</p>
+      <!-- Calendar (basic input for prototype) -->
+      <input type="date" class="w-full border rounded-lg p-2"/>
+      <input type="time" class="w-full border rounded-lg p-2"/>
+      <button onclick="confirmBooking()" class="w-full bg-green-600 hover:bg-green-500 active:bg-green-700 text-white font-medium py-2 rounded-lg">Confirm Booking</button>
+      <button onclick="closeBooking()" class="w-full bg-gray-300 hover:bg-gray-200 text-black py-2 rounded-lg">Cancel</button>
+    </div>
+  </div>
 
+  <script>
+    function openBooking(fieldName){
+      document.getElementById('fieldName').innerText = fieldName;
+      document.getElementById('bookingModal').classList.remove('hidden');
+    }
+    function closeBooking(){
+      document.getElementById('bookingModal').classList.add('hidden');
+    }
+    function confirmBooking(){
+      alert('Booking confirmed!');
+      closeBooking();
+    }
+  </script>
+
+</main>
 </body>
 </html>
