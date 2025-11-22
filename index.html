@@ -3,127 +3,91 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Book a Football Field</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <title>Football Booking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap" rel="stylesheet"/>
   <style>
-    body {
-      font-family: 'Lexend', sans-serif;
-      background-color: #f6f7f8;
-      color: #1f2937;
-    }
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-    .snap-x { scroll-snap-type: x mandatory; }
+    body { font-family: 'Lexend', sans-serif; background-color: #f3f4f6; }
+    .snap-x { scroll-snap-type: x mandatory; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
+    .snap-x::-webkit-scrollbar { display: none; }
     .snap-center { scroll-snap-align: center; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-background-light">
+<body class="flex flex-col min-h-screen">
 
-<!-- Header -->
-<header class="sticky top-0 z-10 flex items-center justify-between bg-white shadow px-4 h-16">
-  <button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100">
-    <span class="material-symbols-outlined text-2xl">arrow_back</span>
-  </button>
-  <h1 class="text-lg font-bold text-center flex-1">Book a Football Field</h1>
-  <div class="w-10"></div>
+<header class="bg-blue-600 text-white py-4 text-center font-bold text-xl shadow">
+  Бронирование футбольного поля
 </header>
 
-<main class="p-4 space-y-4">
+<main class="flex-1 p-4 space-y-4">
 
-  <!-- Field Cards -->
-  <div class="space-y-4">
-
-    <!-- Card 1 -->
-    <div class="bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
-      <div class="relative w-full">
-        <div class="flex w-full overflow-x-auto snap-x no-scrollbar">
-          <!-- Каждая фотка занимает всю ширину экрана -->
-          <div class="w-full flex-shrink-0 snap-center">
-            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1601554231765-7fceeb9c3d17?auto=format&fit=crop&w=800&q=80");'></div>
-          </div>
-          <div class="w-full flex-shrink-0 snap-center">
-            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=800&q=80");'></div>
-          </div>
-          <div class="w-full flex-shrink-0 snap-center">
-            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1560353464-1527e2e007f6?auto=format&fit=crop&w=800&q=80");'></div>
-          </div>
-        </div>
-        <!-- Дотсы -->
-        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-          <div class="w-2 h-2 rounded-full bg-white/80 ring-1 ring-black/10"></div>
-          <div class="w-2 h-2 rounded-full bg-white/40 ring-1 ring-black/10"></div>
-          <div class="w-2 h-2 rounded-full bg-white/40 ring-1 ring-black/10"></div>
-        </div>
-      </div>
-      <div class="p-4 space-y-2">
-        <p class="text-lg font-bold">Green Arena Football Field</p>
-        <p class="text-gray-500">Full-size • Downtown, City Center</p>
-        <p class="text-gray-500">$50 / hour</p>
-        <button onclick="openBooking('Green Arena Football Field')" class="w-full bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-medium py-2 rounded-lg">Book Field</button>
-      </div>
+  <!-- Field 1 -->
+  <div class="bg-white rounded-xl shadow overflow-hidden">
+    <div class="flex snap-x">
+      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1601554231765-7fceeb9c3d17" alt="Green Arena">
+      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d" alt="Green Arena">
+      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1560353464-1527e2e007f6" alt="Green Arena">
     </div>
-
-    <!-- Card 2 -->
-    <div class="bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
-      <div class="relative w-full">
-        <div class="flex w-full overflow-x-auto snap-x no-scrollbar">
-          <div class="w-full flex-shrink-0 snap-center">
-            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1583089752020-3f97efbd3f7d?auto=format&fit=crop&w=800&q=80");'></div>
-          </div>
-          <div class="w-full flex-shrink-0 snap-center">
-            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1562072540-9e2a1536b4d2?auto=format&fit=crop&w=800&q=80");'></div>
-          </div>
-          <div class="w-full flex-shrink-0 snap-center">
-            <div class="aspect-[16/9] bg-cover bg-center" style='background-image: url("https://images.unsplash.com/photo-1552074287-91d3f0f0e9a2?auto=format&fit=crop&w=800&q=80");'></div>
-          </div>
-        </div>
-        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-          <div class="w-2 h-2 rounded-full bg-white/80 ring-1 ring-black/10"></div>
-          <div class="w-2 h-2 rounded-full bg-white/40 ring-1 ring-black/10"></div>
-          <div class="w-2 h-2 rounded-full bg-white/40 ring-1 ring-black/10"></div>
-        </div>
-      </div>
-      <div class="p-4 space-y-2">
-        <p class="text-lg font-bold">Indoor Soccer Center</p>
-        <p class="text-gray-500">5-a-side • Uptown</p>
-        <p class="text-gray-500">$35 / hour</p>
-        <button onclick="openBooking('Indoor Soccer Center')" class="w-full bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-medium py-2 rounded-lg">Book Field</button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Booking Modal -->
-  <div id="bookingModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-xl w-11/12 max-w-md p-4 space-y-4">
-      <h2 class="text-xl font-bold" id="fieldName">Field Name</h2>
-      <p class="text-gray-500">Select a date and time for your booking</p>
-      <!-- Calendar (basic input for prototype) -->
-      <input type="date" class="w-full border rounded-lg p-2"/>
-      <input type="time" class="w-full border rounded-lg p-2"/>
-      <button onclick="confirmBooking()" class="w-full bg-green-600 hover:bg-green-500 active:bg-green-700 text-white font-medium py-2 rounded-lg">Confirm Booking</button>
-      <button onclick="closeBooking()" class="w-full bg-gray-300 hover:bg-gray-200 text-black py-2 rounded-lg">Cancel</button>
+    <div class="p-4 space-y-2">
+      <p class="text-lg font-semibold">Green Arena</p>
+      <p class="text-gray-500">Full-size • Downtown</p>
+      <p class="text-gray-500">$50 / час</p>
+      <button onclick="selectField('Green Arena')" class="mt-2 w-full bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-500 active:bg-blue-700">Выбрать</button>
     </div>
   </div>
 
-  <script>
-    function openBooking(fieldName){
-      document.getElementById('fieldName').innerText = fieldName;
-      document.getElementById('bookingModal').classList.remove('hidden');
-    }
-    function closeBooking(){
-      document.getElementById('bookingModal').classList.add('hidden');
-    }
-    function confirmBooking(){
-      alert('Booking confirmed!');
-      closeBooking();
-    }
-  </script>
+  <!-- Field 2 -->
+  <div class="bg-white rounded-xl shadow overflow-hidden">
+    <div class="flex snap-x">
+      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1583089752020-3f97efbd3f7d" alt="Indoor Soccer Center">
+      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1562072540-9e2a1536b4d2" alt="Indoor Soccer Center">
+      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1552074287-91d3f0f0e9a2" alt="Indoor Soccer Center">
+    </div>
+    <div class="p-4 space-y-2">
+      <p class="text-lg font-semibold">Indoor Soccer Center</p>
+      <p class="text-gray-500">5-a-side • Uptown</p>
+      <p class="text-gray-500">$35 / час</p>
+      <button onclick="selectField('Indoor Soccer Center')" class="mt-2 w-full bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-500 active:bg-blue-700">Выбрать</button>
+    </div>
+  </div>
 
 </main>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-xl w-11/12 max-w-md p-4 space-y-4">
+    <h2 class="text-xl font-bold text-center" id="fieldName">Название поля</h2>
+    <p class="text-gray-500 text-center">Выберите дату и время</p>
+    <input type="date" class="w-full border rounded-lg p-2"/>
+    <input type="time" class="w-full border rounded-lg p-2"/>
+    <button onclick="confirmBooking()" class="w-full bg-green-600 text-white font-medium py-2 rounded-lg hover:bg-green-500 active:bg-green-700">Подтвердить</button>
+    <button onclick="closeBooking()" class="w-full bg-gray-300 text-black py-2 rounded-lg hover:bg-gray-200">Отмена</button>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-xl w-11/12 max-w-md p-4 space-y-4 text-center">
+    <h2 class="text-xl font-bold">Оплата</h2>
+    <p>Перейти к оплате выбранного поля</p>
+    <button onclick="payNow()" class="w-full bg-yellow-500 text-white font-medium py-2 rounded-lg hover:bg-yellow-400 active:bg-yellow-600">Оплатить</button>
+    <button onclick="closePayment()" class="w-full bg-gray-300 text-black py-2 rounded-lg hover:bg-gray-200">Отмена</button>
+  </div>
+</div>
+
+<script>
+  function selectField(name){
+    document.getElementById('fieldName').innerText = name;
+    document.getElementById('bookingModal').classList.remove('hidden');
+  }
+  function closeBooking(){ document.getElementById('bookingModal').classList.add('hidden'); }
+  function confirmBooking(){
+    document.getElementById('bookingModal').classList.add('hidden');
+    document.getElementById('paymentModal').classList.remove('hidden');
+  }
+  function closePayment(){ document.getElementById('paymentModal').classList.add('hidden'); }
+  function payNow(){ alert("Переходим к оплате!"); closePayment(); }
+</script>
+
 </body>
 </html>
