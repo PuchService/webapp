@@ -7,51 +7,163 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap" rel="stylesheet"/>
   <style>
-    body { font-family: 'Lexend', sans-serif; background-color: #f3f4f6; }
+    body { font-family: 'Lexend', sans-serif; background-color: #e5e7eb; }
     .snap-x { scroll-snap-type: x mandatory; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
     .snap-x::-webkit-scrollbar { display: none; }
     .snap-center { scroll-snap-align: center; }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 500; }
+    .badge-indoor { background-color: #dbeafe; color: #1e40af; }
+    .badge-outdoor { background-color: #d1fae5; color: #065f46; }
+    .mobile-container { max-width: 428px; margin: 0 auto; background-color: #f3f4f6; min-height: 100vh; box-shadow: 0 0 50px rgba(0,0,0,0.1); }
+    .image-container { position: relative; }
+    .scroll-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
+    .scroll-dot { width: 6px; height: 6px; border-radius: 50%; background-color: rgba(255,255,255,0.5); transition: background-color 0.3s; }
+    .scroll-dot.active { background-color: white; width: 20px; border-radius: 3px; }
   </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body>
 
+<div class="mobile-container">
 <header class="bg-blue-600 text-white py-4 text-center font-bold text-xl shadow">
   Бронирование футбольного поля
 </header>
 
-<main class="flex-1 p-4 space-y-4">
+<main class="p-4 space-y-4 pb-8">
 
   <!-- Field 1 -->
   <div class="bg-white rounded-xl shadow overflow-hidden">
-    <div class="flex snap-x">
-      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1601554231765-7fceeb9c3d17" alt="Green Arena">
-      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d" alt="Green Arena">
-      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1560353464-1527e2e007f6" alt="Green Arena">
+    <div class="image-container">
+      <div class="flex snap-x" onscroll="updateIndicator(this, 'indicator1')">
+        <img class="w-full h-48 object-cover flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1601554231765-7fceeb9c3d17?w=800" alt="Green Arena 1">
+        <img class="w-full h-48 object-cover flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d?w=800" alt="Green Arena 2">
+        <img class="w-full h-48 object-cover flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1560353464-1527e2e007f6?w=800" alt="Green Arena 3">
+      </div>
+      <div class="scroll-indicator" id="indicator1">
+        <div class="scroll-dot active"></div>
+        <div class="scroll-dot"></div>
+        <div class="scroll-dot"></div>
+      </div>
+      <div class="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full">📷 3 фото</div>
     </div>
-    <div class="p-4 space-y-2">
-      <p class="text-lg font-semibold">Green Arena</p>
-      <p class="text-gray-500">Full-size • Downtown</p>
-      <p class="text-gray-500">$50 / час</p>
-      <button onclick="selectField('Green Arena')" class="mt-2 w-full bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-500 active:bg-blue-700">Выбрать</button>
+    <div class="p-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <p class="text-lg font-bold">Green Arena</p>
+        <span class="badge badge-outdoor">Открытое</span>
+      </div>
+
+      <div class="flex items-start text-gray-600 text-sm">
+        <svg class="w-4 h-4 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span>ул. Абая 123, Алматы</span>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-sm bg-green-100 text-green-800 px-3 py-1 rounded-full">🌱 Натуральный газон</span>
+        <span class="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Full-size</span>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t">
+        <div>
+          <p class="text-2xl font-bold text-blue-600">5000₸</p>
+          <p class="text-xs text-gray-500">за час</p>
+        </div>
+        <button onclick="selectField('Green Arena', 5000)" class="bg-blue-600 text-white font-medium px-6 py-2.5 rounded-lg hover:bg-blue-500 active:bg-blue-700 transition">Забронировать</button>
+      </div>
     </div>
   </div>
 
   <!-- Field 2 -->
   <div class="bg-white rounded-xl shadow overflow-hidden">
-    <div class="flex snap-x">
-      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1583089752020-3f97efbd3f7d" alt="Indoor Soccer Center">
-      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1562072540-9e2a1536b4d2" alt="Indoor Soccer Center">
-      <img class="w-full flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1552074287-91d3f0f0e9a2" alt="Indoor Soccer Center">
+    <div class="image-container">
+      <div class="flex snap-x" onscroll="updateIndicator(this, 'indicator2')">
+        <img class="w-full h-48 object-cover flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1583089752020-3f97efbd3f7d?w=800" alt="Indoor Soccer Center 1">
+        <img class="w-full h-48 object-cover flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1562072540-9e2a1536b4d2?w=800" alt="Indoor Soccer Center 2">
+        <img class="w-full h-48 object-cover flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1552074287-91d3f0f0e9a2?w=800" alt="Indoor Soccer Center 3">
+      </div>
+      <div class="scroll-indicator" id="indicator2">
+        <div class="scroll-dot active"></div>
+        <div class="scroll-dot"></div>
+        <div class="scroll-dot"></div>
+      </div>
+      <div class="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full">📷 3 фото</div>
     </div>
-    <div class="p-4 space-y-2">
-      <p class="text-lg font-semibold">Indoor Soccer Center</p>
-      <p class="text-gray-500">5-a-side • Uptown</p>
-      <p class="text-gray-500">$35 / час</p>
-      <button onclick="selectField('Indoor Soccer Center')" class="mt-2 w-full bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-500 active:bg-blue-700">Выбрать</button>
+    <div class="p-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <p class="text-lg font-bold">Indoor Soccer Center</p>
+        <span class="badge badge-indoor">Крытое</span>
+      </div>
+
+      <div class="flex items-start text-gray-600 text-sm">
+        <svg class="w-4 h-4 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span>пр. Аль-Фараби 77, Алматы</span>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full">⚽ Искусственный газон</span>
+        <span class="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">5-a-side</span>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t">
+        <div>
+          <p class="text-2xl font-bold text-blue-600">3500₸</p>
+          <p class="text-xs text-gray-500">за час</p>
+        </div>
+        <button onclick="selectField('Indoor Soccer Center', 3500)" class="bg-blue-600 text-white font-medium px-6 py-2.5 rounded-lg hover:bg-blue-500 active:bg-blue-700 transition">Забронировать</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Field 3 -->
+  <div class="bg-white rounded-xl shadow overflow-hidden">
+    <div class="image-container">
+      <div class="flex snap-x" onscroll="updateIndicator(this, 'indicator3')">
+        <img class="w-full h-48 object-cover flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800" alt="Stadium Pro 1">
+        <img class="w-full h-48 object-cover flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800" alt="Stadium Pro 2">
+        <img class="w-full h-48 object-cover flex-shrink-0 snap-center" src="https://images.unsplash.com/photo-1577223625816-7546f36ae753?w=800" alt="Stadium Pro 3">
+      </div>
+      <div class="scroll-indicator" id="indicator3">
+        <div class="scroll-dot active"></div>
+        <div class="scroll-dot"></div>
+        <div class="scroll-dot"></div>
+      </div>
+      <div class="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full">📷 3 фото</div>
+    </div>
+    <div class="p-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <p class="text-lg font-bold">Stadium Pro</p>
+        <span class="badge badge-indoor">Крытое</span>
+      </div>
+
+      <div class="flex items-start text-gray-600 text-sm">
+        <svg class="w-4 h-4 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span>ул. Сатпаева 90, Алматы</span>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full">⚽ Искусственный газон</span>
+        <span class="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Full-size</span>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t">
+        <div>
+          <p class="text-2xl font-bold text-blue-600">6000₸</p>
+          <p class="text-xs text-gray-500">за час</p>
+        </div>
+        <button onclick="selectField('Stadium Pro', 6000)" class="bg-blue-600 text-white font-medium px-6 py-2.5 rounded-lg hover:bg-blue-500 active:bg-blue-700 transition">Забронировать</button>
+      </div>
     </div>
   </div>
 
 </main>
+</div>
 
 <!-- Booking Modal -->
 <div id="bookingModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
@@ -87,6 +199,24 @@
   }
   function closePayment(){ document.getElementById('paymentModal').classList.add('hidden'); }
   function payNow(){ alert("Переходим к оплате!"); closePayment(); }
+
+  function updateIndicator(scrollElement, indicatorId) {
+    const indicator = document.getElementById(indicatorId);
+    if (!indicator) return;
+
+    const scrollLeft = scrollElement.scrollLeft;
+    const imageWidth = scrollElement.scrollWidth / 3;
+    const currentIndex = Math.round(scrollLeft / imageWidth);
+
+    const dots = indicator.querySelectorAll('.scroll-dot');
+    dots.forEach((dot, index) => {
+      if (index === currentIndex) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
 </script>
 
 </body>
